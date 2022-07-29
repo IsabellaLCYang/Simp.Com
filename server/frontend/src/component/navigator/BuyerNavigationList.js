@@ -18,7 +18,6 @@ const categories = [
   { id: "Profile", icon: <PeopleIcon />, path: "/userX/profile" },
   { id: "Orders", icon: <LightbulbIcon />, path: "/userX/order_tracking" },
   { id: "Cart", icon: <ShoppingCartIcon />, path: "/userX/cart" },
-  { id: "Log out", icon: <LogoutIcon />, path: "/login" },
 ];
 
 export default function BuyerNavigationList() {
@@ -32,13 +31,6 @@ export default function BuyerNavigationList() {
         navigate(path);
       } else if (statusCode !== 200) {
         setOpenAlert(true);
-      } else {
-        console.log(id);
-        if (id === "Log out") {
-          console.log("first");
-          dispatch(logoutAsync());
-        }
-        navigate(path);
       }
     });
   };

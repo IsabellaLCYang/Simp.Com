@@ -23,6 +23,7 @@ import { logoutAsync } from "../../controller/login/thunks";
 import BuyerSearch from "../chat/BuyerSearch";
 import SellerSearch from "../chat/SellerSearch";
 import { getUserAsync } from "../../controller/login/thunks";
+import LoginIcon from "@mui/icons-material/Login";
 const drawerWidth = 240;
 
 const PaperCssStyle = {
@@ -73,14 +74,10 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 export default function Header(prop) {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-
-  // const [chatTarget, setChatTarget] = React.useState({});
-
   const [userInfo, setUserInfo] = React.useState(null);
   const [sellers, setSellers] = React.useState(null);
   React.useEffect(() => {
@@ -112,11 +109,7 @@ export default function Header(prop) {
   console.log(prop.role);
   return (
     <AppBar position="absolute" open={prop.open}>
-      <Toolbar
-        sx={{
-          pr: "24px", // keep right padding when drawer closed
-        }}
-      >
+      <Toolbar sx={{ pr: "24px" }}>
         <IconButton
           edge="start"
           color="inherit"
@@ -174,20 +167,32 @@ export default function Header(prop) {
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
-          <MenuItem onClick={() => navigate("/userX/profile")}>
-            <ListItemIcon>
-              <PeopleIcon fontSize="small" />
-            </ListItemIcon>
-            Profile
-          </MenuItem>
+          {userInfo != null && (
+            <MenuItem onClick={() => navigate("/userX/profile")}>
+              <ListItemIcon>
+                <PeopleIcon fontSize="small" />
+              </ListItemIcon>
+              Profile
+            </MenuItem>
+          )}
+          {userInfo != null && <Divider />}
+          {userInfo != null && (
+            <MenuItem onClick={handleLogOut}>
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
+          )}
 
-          <Divider />
-          <MenuItem onClick={handleLogOut}>
-            <ListItemIcon>
-              <Logout fontSize="small" />
-            </ListItemIcon>
-            Logout
-          </MenuItem>
+          {userInfo == null && (
+            <MenuItem onClick={() => navigate("/login")}>
+              <ListItemIcon>
+                <LoginIcon fontSize="small" />
+              </ListItemIcon>
+              Log In
+            </MenuItem>
+          )}
         </Menu>
       </Toolbar>
     </AppBar>
@@ -200,7 +205,6 @@ async function getSellerData() {
     response = await fetch("/user/sellers", {
       method: "GET",
       credentials: "include",
-      body: JSON.stringify(),
     });
 
     data = await response.json();
